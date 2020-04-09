@@ -1,0 +1,27 @@
+ spring:
+  rabbitmq:
+    ## 用户名
+    username: boot
+    ## 密码
+    password: 123456
+    ## 服务地址
+    addresses: 127.0.0.1
+    ## 服务端口号
+    host: 5672
+    ## 连接到rabbitMQ的虚拟主机地址
+    virtual-host: /boot
+    listener:
+      simple:
+        retry:
+          #### 开启消费者(程序出现异常的情况下)进行重试
+          enabled: true
+          #### 最大重试次数
+          max-attempts: 5
+          #### 重试间隔次数
+          initial-interval: 3000
+          #### 应用于上一重试间隔的乘数(3S 6S 9S....)
+          #### multiplier: 2
+          #### 最大重试时间间隔
+          #### max-interval: 30000
+        #### 开启手动应答模式
+        acknowledge-mode: manual
