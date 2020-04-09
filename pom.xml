@@ -19,29 +19,17 @@
 
     <!--版本管理-->
     <properties>
-        <rabbit-mq>5.8.0</rabbit-mq>
     </properties>
 
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
 
-            <!--Rabbit MQ核心包-->
-            <dependency>
-                <groupId>com.rabbitmq</groupId>
-                <artifactId>amqp-client</artifactId>
-                <version>${rabbit-mq}</version>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
     <modules>
-        <module>boot-rabbitmq</module>
-        <module>rabbitmq-producer</module>
-        <module>rabbitmq-consumer</module>
-        <module>rabbitmq-delayQuequ</module>
-        <module>rabbitmq-delay</module>
+        <module>rabbitmq</module>
     </modules>
 
 
