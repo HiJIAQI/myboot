@@ -1,0 +1,24 @@
+ #############RabbitMQ配置#############
+ spring:
+  rabbitmq:
+    ## 用户名
+    username: boot
+    ## 密码
+    password: 123456
+    ## 服务地址
+    addresses: 127.0.0.1
+    ## 服务端口号
+    host: 5672
+    ## 连接到rabbitMQ的虚拟主机地址
+    virtual-host: /boot
+    ## 消息发送确认回调
+    publisher-confirms: true
+    publisher-returns: true
+    #设置为 true 后 消费者在消息没有被路由到合适队列情况下会被return监听，而不会自动删除
+    ##spring.rabbitmq.template.mandatory=true
+
+
+
+
+
+
