@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>boot-parent</artifactId>
+        <groupId>com.boot</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>shiro</artifactId>
+
+    <properties>
+        <shiro.version>1.4.1</shiro.version>
+        <thymeleaf.extras.shiro.version>2.0.0</thymeleaf.extras.shiro.version>
+    </properties>
+
+    <dependencies>
+
+        <!--web支持包-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <!--spring-aop包 主要用来做切面 shiro注解需要-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--############Shiro-SpringBoot ############-->
+        <!--shiro跟SpringBoot的直接整合包  相当于 shiro-spring 包-->
+        <!--不再需要 ShiroFilterFactoryBean 实例了，替代它的是 ShiroFilterChainDefinition ，在这里定义 Shiro 的路径匹配规则即可-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.shiro</groupId>-->
+        <!--<artifactId>shiro-spring-boot-web-starter</artifactId>-->
+        <!--<version>1.5.2</version>-->
+        <!--</dependency>-->
+
+
+        <!--############ Apache Shiro ############-->
+
+        <!--Apache Shiro核心框架 -->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.shiro</groupId>-->
+        <!--<artifactId>shiro-core</artifactId>-->
+        <!--<version>${shiro.version}</version>-->
+        <!--</dependency>-->
+
+        <!-- Apache Shiro使用Srping框架 (内置shiro-core核心框架包,若要进行注解支持需要引入spring-aop -> aspectjweaver) -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
+
+        <!-- Apache Shiro使用EhCache缓存框架 -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-ehcache</artifactId>
+            <version>${shiro.version}</version>
+        </dependency>
+
+        <!-- thymeleaf模板引擎和Apache Shiro框架的整合 -->
+        <dependency>
+            <groupId>com.github.theborakompanioni</groupId>
+            <artifactId>thymeleaf-extras-shiro</artifactId>
+            <version>${thymeleaf.extras.shiro.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
