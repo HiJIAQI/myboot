@@ -1,15 +1,15 @@
 package com.itcast.shiro.realm;
 
 import com.itcast.shiro.constant.UserConstant;
-import com.itcast.shiro.util.SaltUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +35,7 @@ public class UserRealm extends AuthorizingRealm {
         roles.add("admin");
         // 获取权限
         Set<String> permissions = new HashSet<>();
-        permissions.add("sys:add");
+        permissions.add("sys:save");
         // 将相应的set数据添加到授权信息中
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         info.setRoles(roles);
@@ -77,11 +77,59 @@ public class UserRealm extends AuthorizingRealm {
         super.setCredentialsMatcher(shaCredentialsMatcher);
     }*/
 
+    /**
+     * 重写方法,清除当前用户的的 授权缓存
+     *
+     * @param principals
+     */
+    @Override
+    public void clearCachedAuthorizationInfo(PrincipalCollection principals) {
+        super.clearCachedAuthorizationInfo(principals);
+    }
+
     public static void main(String[] args) {
-        String oldPassword = new SimpleHash("MD5", "123456",
-                ByteSource.Util.bytes("admin"), 2).toHex();
-        System.out.println(SaltUtil.doSalt("123456", "admin"));
-        System.out.println(oldPassword);
+        //添加成功之后 清除缓存
+        DefaultWebSecurityManager securityManager = (DefaultWebSecurityManager) SecurityUtils.getSecurityManager();
+        UserRealm shiroRealm = (UserRealm) securityManager.getRealms().iterator().next();
+        //清除权限 相关的缓存
+        shiroRealm.clearAllCachedAuthorizationInfo();
+    }
+
+    /**
+     * 重写方法，清除当前用户的 认证缓存
+     *
+     * @param principals
+     */
+    @Override
+    public void clearCachedAuthenticationInfo(PrincipalCollection principals) {
+        super.clearCachedAuthenticationInfo(principals);
+    }
+
+    @Override
+    public void clearCache(PrincipalCollection principals) {
+        super.clearCache(principals);
+    }
+
+    /**
+     * 自定义方法：清除所有 授权缓存
+     */
+    public void clearAllCachedAuthorizationInfo() {
+        getAuthorizationCache().clear();
+    }
+
+    /**
+     * 自定义方法：清除所有 认证缓存
+     */
+    public void clearAllCachedAuthenticationInfo() {
+        getAuthenticationCache().clear();
+    }
+
+    /**
+     * 自定义方法：清除所有的  认证缓存  和 授权缓存
+     */
+    public void clearAllCache() {
+        clearAllCachedAuthenticationInfo();
+        clearAllCachedAuthorizationInfo();
     }
 
 }

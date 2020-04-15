@@ -3,10 +3,14 @@ package com.itcast.shiro.config;
 import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 import com.itcast.shiro.realm.UserRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.SimpleCookie;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,10 +30,16 @@ public class ShiroConfig {
      * 安全管理器
      */
     @Bean(name = "securityManager")
-    public DefaultWebSecurityManager getDefaulWebSecurityManager(@Qualifier("userRealm") UserRealm userRealm) {
+    public DefaultWebSecurityManager getDefaulWebSecurityManager(@Qualifier("userRealm") UserRealm userRealm,
+                                                                 @Qualifier("cookieRememberMeManager") CookieRememberMeManager cookieRememberMeManager,
+                                                                 @Qualifier("ehCacheManager") EhCacheManager ehCacheManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 使用自定义的realm
         securityManager.setRealm(userRealm);
+        // 使用记住我
+        securityManager.setRememberMeManager(cookieRememberMeManager);
+        // 自定义缓存实现
+        securityManager.setCacheManager(ehCacheManager);
         return securityManager;
     }
 
@@ -67,6 +77,8 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/js/**", "anon");
         filterChainDefinitionMap.put("/common/**", "anon");
         filterChainDefinitionMap.put("/login", "anon");//调用登录接口
+        filterChainDefinitionMap.put("/common/**", "anon");
+        filterChainDefinitionMap.put("/index", "user");
         //退出登陆路径
         filterChainDefinitionMap.put("/logout", "logout");
         //将所有没有授权的url都设置为需要认证后才能访问(该设置必须放在最后一个Map)
@@ -107,6 +119,14 @@ public class ShiroConfig {
     //@Dependson指：在另外一个实例创建之后才创建当前实例，也就是，最终两个实例都会创建，只是顺序不一样
     public UserRealm userRealm(@Qualifier("hashedCredentialsMatcher") HashedCredentialsMatcher hashedCredentialsMatcher) {
         UserRealm realm = new UserRealm();
+        //启用身份验证缓存，即缓存AuthenticationInfo信息，默认false
+        realm.setAuthenticationCachingEnabled(true);
+        //缓存AuthenticationInfo信息的缓存名称 在ehcache-shiro.xml中有对应缓存的配置
+        realm.setAuthenticationCacheName("authenticationCache");
+        //启用授权缓存，即缓存AuthorizationInfo信息，默认false
+        realm.setAuthorizationCachingEnabled(true);
+        //缓存AuthorizationInfo信息的缓存名称  在ehcache-shiro.xml中有对应缓存的配置
+        realm.setAuthorizationCacheName("authorizationCache");
         //加入密码管理
         realm.setCredentialsMatcher(hashedCredentialsMatcher);
         return realm;
@@ -130,4 +150,49 @@ public class ShiroConfig {
         return new ShiroDialect();
     }
 
+    /**
+     * shiro缓存管理器;
+     * 需要添加到securityManager中
+     */
+    @Bean("ehCacheManager")
+    public EhCacheManager ehCacheManager() {
+        System.out.println("ShiroConfiguration.getEhCacheManager()");
+        EhCacheManager ehCacheManager = new EhCacheManager();
+        ehCacheManager.setCacheManagerConfigFile("classpath:config/ehcache.xml");
+        return ehCacheManager;
+    }
+
+    /**
+     * 记住我操作
+     */
+    @Bean(name = "cookieRememberMeManager")
+    public CookieRememberMeManager getCookieRememberMeManager(@Qualifier("cookie") SimpleCookie cookie) {
+        CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
+        cookieRememberMeManager.setCookie(cookie);
+        //rememberMe cookie加密的密钥 建议每个项目都不一样 默认AES算法 密钥长度(128 256 512 位)
+        cookieRememberMeManager.setCipherKey(Base64.decode("2AvVhdsgUs0FSA3SDFAdag=="));
+        return cookieRememberMeManager;
+    }
+
+    @Bean(name = "cookie")
+    public SimpleCookie getSimpleCookie() {
+        // 实例化Simplecookie构造器 并且设置它的名称
+        SimpleCookie cookie = new SimpleCookie("rememberMe");
+        // cookie生效时间30天,单位秒;
+        cookie.setMaxAge(120);
+        return cookie;
+    }
+
+//    https://blog.csdn.net/qq_34021712/article/details/80309246
+    /**
+     * 让某个实例的某个方法的返回值注入为Bean的实例
+     * Spring静态注入
+     */
+//    @Bean
+//    public MethodInvokingFactoryBean getMethodInvokingFactoryBean(@Qualifier("userRealm") UserRealm userRealm){
+//        MethodInvokingFactoryBean factoryBean = new MethodInvokingFactoryBean();
+//        factoryBean.setStaticMethod("org.apache.shiro.SecurityUtils.setSecurityManager");
+//        factoryBean.setArguments(new Object[]{securityManager()});
+//        return factoryBean;
+//    }
 }

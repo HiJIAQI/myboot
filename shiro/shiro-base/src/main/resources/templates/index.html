@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>登陆成功</h3>
+<h2>假设当前访问用户为角色admin</h2>
+<h2>角色admin存在如下权限:保存</h2>
+<h2 style="color: red">若用户点击编辑按钮时会跳转到未认证提示页</h2>
+<a th:href="@{/admin}">admin角色才能访问</a>
+<hr>
+<a th:href="@{/save}">保存</a> <a th:href="@{/edit}">编辑</a>
+<hr>
+<a th:href="@{/logout}">退出</a>
+</body>
+</html>

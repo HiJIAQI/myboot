@@ -27,12 +27,14 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String doLogin(String username, String password) {
+    public String doLogin(String username, String password, boolean rememberMe) {
         // 主体提交认证请求
         Subject currentUser = SecurityUtils.getSubject();
         // 创建token
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         try {
+            // 记住密码设置
+            token.setRememberMe(rememberMe);
             // 进行登陆
             currentUser.login(token);
             return "redirect:/index";
@@ -52,14 +54,7 @@ public class LoginController {
         return "redirect:/login";
     }
 
-    //有save权限才能访问
-    @GetMapping("/save")
-    @ResponseBody
-    @RequiresPermissions("sys:save")
-    public String save() {
-        return "save success";
-    }
-
+    //登录后的首页
     @GetMapping("/index")
     public String loginSuccessView() {
         return "/index";
@@ -73,6 +68,14 @@ public class LoginController {
         return "admin success";
     }
 
+    //有save权限才能访问
+    @GetMapping("/save")
+    @ResponseBody
+    @RequiresPermissions("sys:save")
+    public String save() {
+        return "save success";
+    }
+
     //有edit权限才能访问
     @RequiresPermissions("sys:edit")
     @GetMapping("/edit")
@@ -81,6 +84,15 @@ public class LoginController {
         return "edit success";
     }
 
+    //有delete权限才能访问
+    @RequiresPermissions("sys:delete")
+    @GetMapping("/delete")
+    @ResponseBody
+    public String delete() {
+        return "delete success";
+    }
+
+    //未授权错误页面
     @GetMapping("/unauthorized")
     public String unauthorized() {
         return "/unauthorized";

@@ -11,11 +11,32 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>shiro</artifactId>
+    <packaging>pom</packaging>
+    <description>Shiro基础依赖包</description>
+
+
+    <modules>
+        <module>shiro-base</module>
+        <module>shiro-redis</module>
+    </modules>
 
     <properties>
         <shiro.version>1.4.1</shiro.version>
         <thymeleaf.extras.shiro.version>2.0.0</thymeleaf.extras.shiro.version>
     </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Apache Shiro使用EhCache缓存框架  基础-->
+            <dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-ehcache</artifactId>
+                <version>${shiro.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
 
     <dependencies>
 
@@ -36,11 +57,6 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
 
         <!--############Shiro-SpringBoot ############-->
         <!--shiro跟SpringBoot的直接整合包  相当于 shiro-spring 包-->
@@ -68,12 +84,6 @@
             <version>${shiro.version}</version>
         </dependency>
 
-        <!-- Apache Shiro使用EhCache缓存框架 -->
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-ehcache</artifactId>
-            <version>${shiro.version}</version>
-        </dependency>
 
         <!-- thymeleaf模板引擎和Apache Shiro框架的整合 -->
         <dependency>
