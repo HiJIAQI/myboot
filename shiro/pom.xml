@@ -65,11 +65,11 @@
         <!--############ Apache Shiro ############-->
 
         <!--Apache Shiro核心框架-->
-        <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-core</artifactId>
-            <version>${shiro.version}</version>
-        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.apache.shiro</groupId>-->
+        <!--<artifactId>shiro-core</artifactId>-->
+        <!--<version>${shiro.version}</version>-->
+        <!--</dependency>-->
 
         <!-- Apache Shiro使用Srping框架 (内置shiro-core核心框架包,若要进行注解支持需要引入spring-aop -> aspectjweaver) -->
         <dependency>
