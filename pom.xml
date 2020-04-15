@@ -19,17 +19,27 @@
 
     <!--版本管理-->
     <properties>
+
     </properties>
 
     <!-- 依赖声明 -->
     <dependencyManagement>
-        <dependencies>
 
-        </dependencies>
     </dependencyManagement>
+
+    <!-- 依赖引入 -->
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
 
     <modules>
         <module>rabbitmq</module>
+        <module>shiro</module>
+        <module>redis</module>
     </modules>
 
 
