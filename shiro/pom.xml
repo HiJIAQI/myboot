@@ -15,17 +15,13 @@
     <description>Shiro基础依赖包</description>
 
 
-    <modules>
-
-        <module>shiro-redis</module>
-    </modules>
-
     <properties>
         <shiro.version>1.4.1</shiro.version>
         <thymeleaf.extras.shiro.version>2.0.0</thymeleaf.extras.shiro.version>
     </properties>
 
 
+    <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
             <!-- Apache Shiro使用EhCache缓存框架  基础-->
@@ -37,9 +33,7 @@
         </dependencies>
     </dependencyManagement>
 
-
     <dependencies>
-
         <!--web支持包-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -84,7 +78,6 @@
             <version>${shiro.version}</version>
         </dependency>
 
-
         <!-- thymeleaf模板引擎和Apache Shiro框架的整合 -->
         <dependency>
             <groupId>com.github.theborakompanioni</groupId>
@@ -93,5 +86,12 @@
         </dependency>
 
     </dependencies>
+
+
+    <modules>
+        <module>shiro-redis</module>
+        <module>shiro-ehcache</module>
+        <module>shiro-base</module>
+    </modules>
 
 </project>
