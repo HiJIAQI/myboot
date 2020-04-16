@@ -1,0 +1,23 @@
+server:
+  port: 80
+
+##配置thymeleaf模板模式
+spring:
+  thymeleaf:
+    mode: HTML5
+    cache: false
+    ##这个是配置模板的路径,默认就是templates 可不做配置
+    prefix: classpath:/templates/
+  ##静态资源的虚拟访问路径(底层默认/**)
+  mvc:
+    static-path-pattern: /**
+  ##静态资源文件所在位置
+  resources:
+    static-locations: classpath:/static,file:E://img,file:/data/imageserver/wechat/
+  ## 文件上传大小配置方法一(还可根据bean来做配置->UploadConfig.class)
+  servlet:
+      multipart:
+        # 最大支持单个文件大小
+        max-file-size: 1MB
+        # 最大支持请求总上传的数据大小
+        max-request-size: 1MB
