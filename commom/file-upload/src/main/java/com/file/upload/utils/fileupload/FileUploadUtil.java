@@ -1,5 +1,7 @@
 package com.file.upload.utils.fileupload;
 
+import com.file.upload.enums.ResultEnum;
+import com.file.upload.handler.FileException;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 自定义的MultipartFile的实现类
@@ -21,36 +24,44 @@ public class FileUploadUtil {
      * 图片上传(带压缩处理)
      *
      * @param path          需要上传的路径
-     * @param filePrefix    进行自定义的前缀
+     * @param filePrefix    进行自定义的前缀(非必需)
+     * @param pattern       文件格式(非必需)
      * @param multipartFile 图片
      * @return 图片名称
      */
-    public static String uploadImg(String path, String filePrefix, MultipartFile multipartFile) {
-        return upload(path, filePrefix, multipartFile, true);
+    public static String uploadImgAndCondense(String path, String filePrefix, String[] pattern, MultipartFile multipartFile) {
+        return upload(path, filePrefix, pattern, multipartFile, true);
     }
 
     /**
      * 文件上传
      *
      * @param path          需要上传的路径
-     * @param filePrefix    进行自定义的前缀
+     * @param filePrefix    进行自定义的前缀(非必需)
+     * @param pattern       文件格式(非必需)
      * @param multipartFile 文件
      * @return 文件名称
      */
-    public static String uploadFile(String path, String filePrefix, MultipartFile multipartFile) {
-        return upload(path, filePrefix, multipartFile, false);
+    public static String uploadFile(String path, String filePrefix, String[] pattern, MultipartFile multipartFile) {
+        return upload(path, filePrefix, pattern, multipartFile, false);
     }
 
     /**
      * 将上传的图片保存到服务器
      *
-     * @param path          上传服务器路径
-     * @param filePrefix    文件名称前缀
-     * @param multipartFile 所上传的图片
-     * @param isCondense    是否进行压缩
+     * @param path          上传服务器路径(必需)
+     * @param filePrefix    文件名称前缀(非必需)
+     * @param pattern       文件格式(非必需)
+     * @param multipartFile 所上传的图片(必需)
+     * @param isCondense    是否进行压缩(必需)
      * @return 保存到数据库的文件名
      */
-    private static String upload(String path, String filePrefix, MultipartFile multipartFile, boolean isCondense) {
+    private static String upload(String path, String filePrefix, String[] pattern, MultipartFile multipartFile, boolean isCondense) {
+
+        //判断文件是否存在
+        if (Objects.isNull(multipartFile)) {
+            throw new FileException(ResultEnum.FILE_NOT_EXIST);
+        }
 
         // 获取文件名
         String originalFilename = multipartFile.getOriginalFilename();
@@ -58,10 +69,13 @@ public class FileUploadUtil {
         // 获取文件后缀名
         String ext = FileNameUtils.getSuffix(originalFilename);
 
-        // 判断文件格式
-        List<String> extList = Arrays.asList(".jpg", ".png", ".jpeg");
-        if (!extList.contains(ext)) {
-            throw new RuntimeException("文件格式有误");
+        // 文件格式校验
+        if (pattern != null && pattern.length > 0) {
+            // 判断文件格式
+            List<String> extList = Arrays.asList(pattern);
+            if (!extList.contains(ext)) {
+                throw new FileException(ResultEnum.FILE_PATTERN_ERROR);
+            }
         }
 
         // 获取新的图片名
@@ -84,8 +98,8 @@ public class FileUploadUtil {
         //保存成功返回图片名字
         try {
             multipartFile.transferTo(localFile);
-        } catch (IOException e) {
-            throw new RuntimeException("图片上传失败");
+        } catch (Exception e) {
+            throw new FileException(ResultEnum.FILE_UPLOAD_ERROR);
         }
 
         // 对文件进行压缩处理
@@ -133,6 +147,5 @@ public class FileUploadUtil {
             System.err.println(e.getMessage());
         }
     }
-
 }
 

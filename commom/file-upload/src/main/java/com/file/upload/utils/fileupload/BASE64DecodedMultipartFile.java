@@ -7,8 +7,7 @@ import sun.misc.BASE64Encoder;
 import java.io.*;
 
 /**
- * 自定义的MultipartFile的实现类
- * 主要用于Multipart与base64文件之间的转换
+ * base64类型图片转Multipart工具类封装
  *
  * @author JIAQI
  * @date 2018/12/25 - 22:51

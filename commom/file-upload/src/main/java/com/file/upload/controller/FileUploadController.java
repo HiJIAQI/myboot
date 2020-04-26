@@ -1,14 +1,21 @@
 package com.file.upload.controller;
 
+import com.file.upload.constant.FileConstant;
+import com.file.upload.utils.filedownload.FileDownLoadUtil;
 import com.file.upload.utils.fileupload.FileUploadUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 功能描述：
@@ -17,6 +24,7 @@ import java.util.Date;
  * @date 2020/4/15 - 16:36
  */
 @Controller
+@Slf4j
 public class FileUploadController {
 
     //获取系统类型  区分是window 还是Linux环境
@@ -37,7 +45,7 @@ public class FileUploadController {
     @PostMapping("/upload")
     @ResponseBody
     public String uploadView(MultipartFile file) throws Exception {
-        String saveUpload = FileUploadUtil.uploadImg(PATH, "ONE", file);
+        String saveUpload = FileUploadUtil.uploadFile(PATH, "ONE", FileConstant.BOOK_IMG_PATTERN, file);
         return saveUpload;
     }
 
@@ -47,8 +55,45 @@ public class FileUploadController {
     @PostMapping("/batchUpload")
     @ResponseBody
     public String uploadView(MultipartFile[] files) throws Exception {
-        //String saveUpload = FileUploadUtil.uploadImg(PATH, files, "ONE");
         return "saveUpload";
+    }
+
+    //文件下载相关代码
+
+    /**
+     * 文件下载
+     */
+    @GetMapping("/downloadFile")
+    @ResponseBody
+    public String downloadFile(String fileName) throws Exception {
+        log.info("单个文件下载接口入参:[filename={}]", fileName);
+        if (fileName.isEmpty()) {
+            return "文件不能为空";
+        }
+        try {
+            FileDownLoadUtil.downOneFile("E://MyImg//20200415//", fileName);
+        } catch (Exception e) {
+            log.error("单个文件下载接口异常:{fileName={},ex={}}", fileName, e);
+        }
+        return "下载失败";
+    }
+
+    /**
+     * 批量打包下载文件
+     *
+     * @param fileName 文件名，多个用英文逗号分隔
+     */
+    @GetMapping("/down-together")
+    public void downTogether(@RequestParam(value = "filename", required = false) String fileName) {
+        log.info("批量打包文件下载接口入参:[filename={}]", fileName);
+        if (fileName.isEmpty()) return;
+        List<String> fileNameList = Arrays.asList(fileName.split(","));
+        if (CollectionUtils.isEmpty(fileNameList)) return;
+        try {
+            FileDownLoadUtil.downTogetherAndZip("E://MyImg//20200415//", fileNameList);
+        } catch (Exception e) {
+            log.error("批量打包文件下载接口异常:{fileName={},ex={}}", fileName, e);
+        }
     }
 
 }
