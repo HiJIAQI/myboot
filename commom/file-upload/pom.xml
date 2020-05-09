@@ -23,6 +23,7 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
+
         <!--图片压缩工具类-->
         <dependency>
             <groupId>net.coobird</groupId>
@@ -31,9 +32,17 @@
         </dependency>
 
         <!--poi -->
+        <!--docx文件读取-->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
+            <version>4.1.2</version>
+        </dependency>
+
+        <!--doc文件的读取-->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
             <version>4.1.2</version>
         </dependency>
 

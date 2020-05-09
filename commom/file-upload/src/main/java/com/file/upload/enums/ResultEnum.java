@@ -51,7 +51,8 @@ public enum ResultEnum {
     FILE_NOT_EXIST(80001, "文件不存在"),
     FILE_PATTERN_ERROR(80002, "文件格式有误"),
     FILE_UPLOAD_ERROR(80003, "文件上传失败"),
-    FILE_DOWNLOAD_ERROR(80004, "文件下载错误");
+    FILE_DOWNLOAD_ERROR(80004, "文件下载错误"),
+    FILE_READ_ERROR(80005, "文件读取错误");
 
     private Integer code;
 

@@ -1,15 +1,16 @@
 package com.file.upload.controller;
 
+import com.file.upload.UserDTO;
 import com.file.upload.constant.FileConstant;
+import com.file.upload.utils.WordReadUtil;
 import com.file.upload.utils.filedownload.FileDownLoadUtil;
 import com.file.upload.utils.fileupload.FileUploadUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
@@ -32,10 +33,24 @@ public class FileUploadController {
     private final String PATH = System.getProperty("os.name").toLowerCase().startsWith("win") ? "E:/MyImg" + SONPATH : "/data/imageserver/wechat" + SONPATH;
 
     /**
+     * 走参数校验注解
+     *
+     * @param userDTO
+     * @return
+     */
+    @PostMapping("/save/valid")
+    @ResponseBody
+    public String save(@Validated @RequestBody UserDTO userDTO) {
+        return "SUCCESS";
+    }
+
+    /**
      * 进入文件上传页
      */
     @GetMapping("/upload")
-    public String uploadView() {
+    public String uploadView(Model model) {
+        StringBuilder builder = WordReadUtil.countLength();
+        model.addAttribute("builder", builder);
         return "/upload";
     }
 
