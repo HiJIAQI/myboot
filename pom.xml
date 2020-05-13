@@ -49,6 +49,7 @@
         <module>shiro</module>
         <module>redis</module>
         <module>commom</module>
+        <module>websocket</module>
     </modules>
 
 

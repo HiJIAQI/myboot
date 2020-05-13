@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试</title>
+</head>
+<body>
+Welcome<br/>
+<hr/>
+<div id="message"></div>
+</body>
+
+<script src="http://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script type="text/javascript">
+    // 建立连接对象（还未发起连接）
+    var socket = new SockJS("/endpointChat");
+
+    // 获取STOMP子协议的客户端对象
+    var stompClient = Stomp.over(socket);
+
+    stompClient.connect({name: 'test1'}, function connectCallback(frame) {
+            // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
+            setMessageInnerHTML("连接成功==>用于接收消息(点对点)");
+
+            stompClient.subscribe('/user/queue/message', function (response) {
+                console.log(response);
+                var returnData = JSON.parse(response.body);
+                setMessageInnerHTML("你接收到的消息为:" + returnData.responseMessage);
+            });
+
+            /* 接收来自@SendToUser注解的精确推送 */
+            stompClient.subscribe('/user/queue/subscribeUser', function (response) {
+                var returnData = JSON.parse(response.body);
+                setMessageInnerHTML("@SendToUser接收到的消息为:" + returnData.name);
+            });
+
+            /* 接收来自@SendTo注解广播的推送 */
+            stompClient.subscribe('/topic/subscribeTest', function (response) {
+                var returnData = JSON.parse(response.body);
+                setMessageInnerHTML("接收了来自@SendTo注解广播的推送消息为:" + returnData.responseMessage);
+            });
+        },
+        function errorCallBack(error) {
+            // 连接失败时（服务器响应 ERROR 帧）的回调方法
+            setMessageInnerHTML("连接失败");
+        }
+    );
+
+    //将消息显示在网页上
+    function setMessageInnerHTML(innerHTML) {
+        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+    }
+
+</script>
+
+</html>

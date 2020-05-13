@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试</title>
+</head>
+<body>
+<h1>websocket!!!!</h1>
+<br/><input id="text" type="text"/>
+<button onclick="send()">发送消息</button>
+<button onclick="send1()">发送消息到tets1用户</button>
+
+<button onclick="subscribe1()">订阅消息/topic/subscribeTest</button>
+<hr/>
+<button onclick="closeWebSocket()">关闭WebSocket连接</button>
+<hr/>
+<div id="message"></div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script>
+
+    // websocket的连接地址:表示连接的SockJS的endpoint名称为/endpointChat
+    var socket = new SockJS("/endpointChat");
+
+    // 使用STOMP来创建WebSocket客户端
+    var stompClient = Stomp.over(socket);
+    // 调用stompClient中的connect方法来连接服务端
+    // 向服务器发起websocket连接并发送CONNECT帧
+    stompClient.connect('guest', 'guest', function connectCallback(frame) {
+            // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
+            setMessageInnerHTML("连接成功");
+            // 调用stompClient中的subscribe方法来订阅/topic/getResponse发送来的消息
+            // 也就是我们在Controller中的broadcast方法上添加的@SendTo注解的参数。
+            // stompClient中的send方法表示发送一条消息到服务端，
+            // 客户端订阅消息的目的地址：此值BroadcastCtl中被@SendTo("/topic/getResponse")注解的里配置的值
+
+                /* 接收来自广播的推送 */
+            stompClient.subscribe('/topic/getResponse', function (response) {
+                console.log(response);
+                var returnData = JSON.parse(response.body);
+                setMessageInnerHTML("/topic/getResponse 你接收到的消息为:" + returnData.responseMessage);
+            });
+
+                /* 接收来自@SendTo广播的推送 */
+            stompClient.subscribe('/topic/subscribeTest', function (response) {
+                console.log(response);
+                var returnData = JSON.parse(response.body);
+                setMessageInnerHTML("/topic/subscribeTest 你接收到的消息为:" + returnData.responseMessage);
+            });
+        },
+        function errorCallBack(error) {
+            // 连接失败时（服务器响应 ERROR 帧）的回调方法
+            setMessageInnerHTML("连接失败");
+        }
+    );
+
+
+    //发送消息
+    function send() {
+        // 客户端消息发送的目的：服务端使用BroadcastCtl中
+        // @MessageMapping("/sendTest")注解的方法来处理发送过来的消息
+        var message = document.getElementById('text').value;
+        var messageJson = JSON.stringify({"name": message});
+        stompClient.send("/app/sendTest", {}, messageJson);
+        setMessageInnerHTML("/app/sendTest 你发送的消息:" + message);
+    }
+
+    function send1() {
+        var message = document.getElementById('text').value;
+        var messageJson = JSON.stringify({"name": message});
+        stompClient.send("/app/sendUser", {}, messageJson);
+        setMessageInnerHTML("/app/sendUser 你发送的消息:" + message);
+    }
+
+    //订阅消息
+    function subscribe1() {
+        stompClient.subscribe('/app/subscribeTest', function (response) {
+            setMessageInnerHTML("已成功订阅/topic/subscribeTest");
+            var returnData = JSON.parse(response.body);
+            setMessageInnerHTML("/topic/subscribeTest 你接收到的消息为:" + returnData.responseMessage);
+        });
+    }
+
+
+    //将消息显示在网页上
+    function setMessageInnerHTML(innerHTML) {
+        document.getElementById('message').innerHTML += innerHTML + '<br/>';
+    }
+
+    //断开
+    function closeWebSocket() {
+        if (stompClient != null) {
+            stompClient.disconnect();
+        }
+        setMessageInnerHTML("关闭连接成功");
+    }
+
+</script>
+</html>
