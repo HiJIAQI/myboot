@@ -1,0 +1,10 @@
+server:
+  port: 80
+
+##配置thymeleaf模板模式
+spring:
+  thymeleaf:
+    mode: HTML5
+    cache: false
+    ##这个是配置模板的路径,默认就是templates 可不做配置
+    prefix: classpath:/templates/
