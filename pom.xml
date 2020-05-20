@@ -19,16 +19,29 @@
 
     <!--版本管理-->
     <properties>
-
+        <mybatis.version>2.1.1</mybatis.version>
+        <mysql.version>8.0.16</mysql.version>
     </properties>
 
     <!-- 依赖声明 -->
     <dependencyManagement>
-
+        <dependencies>
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
 
     <!-- 依赖引入 -->
     <dependencies>
+
         <!--lombok 插件支持-->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -42,6 +55,7 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
+
     </dependencies>
 
     <modules>

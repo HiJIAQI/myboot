@@ -6,11 +6,13 @@ import com.itcast.realm.PcRealm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authc.pam.FirstSuccessfulStrategy;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +34,8 @@ public class ShiroConfig {
     @Bean(name = "securityManager")
     public DefaultWebSecurityManager getDefaulWebSecurityManager(@Qualifier("customModularRealmAuthenticator") CustomModularRealmAuthenticator customModularRealmAuthenticator,
                                                                  @Qualifier("appRealm") AppRealm appRealm,
-                                                                 @Qualifier("pcRealm") PcRealm pcRealm) {
+                                                                 @Qualifier("pcRealm") PcRealm pcRealm,
+                                                                 @Qualifier("sessionManager") DefaultSessionManager sessionManager) {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         // 注入自定义的realm 以及 认证器
         securityManager.setAuthenticator(customModularRealmAuthenticator);
@@ -40,6 +43,7 @@ public class ShiroConfig {
         realmList.add(appRealm);
         realmList.add(pcRealm);
         securityManager.setRealms(realmList);
+        securityManager.setSessionManager(sessionManager);
         return securityManager;
     }
 
@@ -54,13 +58,10 @@ public class ShiroConfig {
         // 身份认证失败，则跳转到登录页面的配置
         factoryBean.setLoginUrl("/login");
         // 登录成功后要跳转的链接
-        factoryBean.setSuccessUrl("/admin");
-        //未认证页面
-        factoryBean.setUnauthorizedUrl("/unauthorized");
+        factoryBean.setSuccessUrl("/loginSuccess");
         // Shiro连接约束配置，即过滤链的定义
         LinkedHashMap<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // 对静态资源设置匿名访问 springboot默认把所有的静态资源都映射到static目录
-        filterChainDefinitionMap.put("/css/**", "anon");
         filterChainDefinitionMap.put("/login", "anon");//调用登录接口
         //退出登陆路径
         filterChainDefinitionMap.put("/logout", "logout");
@@ -70,21 +71,24 @@ public class ShiroConfig {
         return factoryBean;
     }
 
+    @Bean("sessionManager")
+    public DefaultWebSessionManager sessionManager() {
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        // 去掉shiro登录时url里的JSESSIONID
+        sessionManager.setSessionIdUrlRewritingEnabled(false);
+        return sessionManager;
+    }
+
     /**
      * 配置使用自定义认证器，可以实现Realm认证，
      * 并且可以指定特定Realm处理特定类型的验证
      */
     @Bean("customModularRealmAuthenticator")
-    public CustomModularRealmAuthenticator customModularRealmAuthenticator() {
+    public CustomModularRealmAuthenticator customModularRealmAuthenticator(@Qualifier("appRealm") AppRealm appRealm,
+                                                                           @Qualifier("pcRealm") PcRealm pcRealm) {
         CustomModularRealmAuthenticator realmAuthenticator = new CustomModularRealmAuthenticator();
-        // 将多Realm配置到自定义的认证器中
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("app", "appRealm");
-        map.put("pc", "pcRealm");
-        realmAuthenticator.setDefinedRealms(map);
-        // 配置认证策略
-        FirstSuccessfulStrategy firstSuccessfulStrategy = new FirstSuccessfulStrategy();
-        realmAuthenticator.setAuthenticationStrategy(firstSuccessfulStrategy);
+        // 设置认证策略只验证第一个realm
+        realmAuthenticator.setAuthenticationStrategy(new FirstSuccessfulStrategy());
         return realmAuthenticator;
     }
 

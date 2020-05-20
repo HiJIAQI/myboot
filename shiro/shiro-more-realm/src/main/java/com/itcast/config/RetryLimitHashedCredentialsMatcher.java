@@ -5,10 +5,10 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 
 /**
- * 功能描述：免密登陆
+ * 功能描述：自定义密码匹配器
  * 通过继承HashedCredentialsMatcher，重写其中的doCredentialsMatch方法
- * 相当于重新写了密码匹配器
- *
+ * shiro中的密码对比流程：doCredentialsMatch()->SimpleCredentialsMatcher
+ * ->equals()->MessageDigest类中的isEqual()方法
  * @authro JIAQI
  * @date 2019/11/15 - 15:06
  */

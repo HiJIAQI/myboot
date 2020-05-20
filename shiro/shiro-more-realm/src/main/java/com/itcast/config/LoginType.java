@@ -11,11 +11,11 @@ public class LoginType {
     /**
      * App移动端用户
      */
-    public static final String APP_USER = "app";
+    public static final String APP_USER = "App";
 
     /**
      * PC端用户
      */
-    public static final String PC_USER = "pc";
+    public static final String PC_USER = "Pc";
 
 }

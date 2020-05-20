@@ -37,7 +37,7 @@ public class CustomLoginToken extends UsernamePasswordToken {
      *
      * @param username  用户名
      * @param password  密码
-     * @param loginType 登陆类型（PC端用户 单位用户）
+     * @param loginType 登陆类型（PC端用户 APP端用户）
      */
     public CustomLoginToken(final String username, final String password,
                             final String loginType) {

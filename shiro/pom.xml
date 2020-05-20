@@ -34,6 +34,7 @@
     </dependencyManagement>
 
     <dependencies>
+
         <!--web支持包-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

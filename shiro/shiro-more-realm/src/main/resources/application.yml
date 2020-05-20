@@ -1,10 +1,29 @@
 server:
   port: 80
 
-##配置thymeleaf模板模式
 spring:
+  ##mysql
+  datasource:
+    url: jdbc:mysql://47.102.115.140:3306/myboot?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  ##配置thymeleaf模板模式
   thymeleaf:
-    mode: HTML5
-    cache: false
-    ##这个是配置模板的路径,默认就是templates 可不做配置
-    prefix: classpath:/templates/
+      mode: HTML5
+      cache: false
+      ##这个是配置模板的路径,默认就是templates 可不做配置
+      prefix: classpath:/templates/
+# mybatis配置
+mybatis:
+  ## 对应实体类路径(别名包支持)
+  type-aliases-package: com.itcast.entity
+  ## xml文件路径
+  mapper-locations: classpath:mybatis/**/*Mapper.xml
+  ## 驼峰命名
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.itcast.dao: debug
