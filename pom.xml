@@ -21,6 +21,7 @@
     <properties>
         <mybatis.version>2.1.1</mybatis.version>
         <mysql.version>8.0.16</mysql.version>
+        <pagehelper.version>1.2.13</pagehelper.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -35,6 +36,12 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
+            </dependency>
+            <!-- pagehelper 分页插件 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -64,6 +71,8 @@
         <module>redis</module>
         <module>commom</module>
         <module>websocket</module>
+        <module>api</module>
+        <module>security</module>
     </modules>
 
 

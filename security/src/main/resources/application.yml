@@ -1,0 +1,23 @@
+spring:
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:mysql://47.102.115.140:3306/demo_security?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  devtools:
+    restart:
+      enabled: false
+
+mybatis:
+  # xml文件路径
+  mapper-locations: classpath:mybatis/**/*Mapper.xml
+  # 驼峰命名
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    com.itcast.demo: debug
+
