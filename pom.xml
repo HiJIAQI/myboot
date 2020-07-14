@@ -73,6 +73,7 @@
         <module>websocket</module>
         <module>api</module>
         <module>security</module>
+        <module>activiti</module>
     </modules>
 
 
