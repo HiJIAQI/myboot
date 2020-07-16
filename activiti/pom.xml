@@ -21,7 +21,7 @@
         <!--Activiti 相关依赖-->
         <dependency>
             <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring-boot-starter-basic</artifactId>
+            <artifactId>activiti-spring-boot-starter-rest-api</artifactId>
             <version>${activiti.version}</version>
         </dependency>
 
@@ -35,6 +35,11 @@
                     <artifactId>activiti-bpmn-model</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <!-- xml 图像类库 -->
