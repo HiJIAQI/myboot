@@ -26,8 +26,6 @@ import org.activiti.engine.task.TaskQuery;
 import org.activiti.image.ProcessDiagramGenerator;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -54,8 +52,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ModelerController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ModelerController.class);
-
     @Resource
     private RepositoryService repositoryService;
     @Resource
@@ -80,10 +76,11 @@ public class ModelerController {
 
     /**
      * 跳转编辑器页面
+     * http://localhost:8080/modeler/modeler.html?modelId=1
      */
     @GetMapping("/editor")
     public String editor() {
-        return "modeler";
+        return "/modeler";
     }
 
     /**
@@ -94,7 +91,7 @@ public class ModelerController {
      */
     @RequestMapping("/create")
     public void create(HttpServletResponse response, String name, String key) throws IOException {
-        logger.info("创建模型入参name：{},key:{}", name, key);
+        log.info("创建模型入参name：{},key:{}", name, key);
         Model model = repositoryService.newModel();
         ObjectNode modelNode = objectMapper.createObjectNode();
         modelNode.put(ModelDataJsonConstants.MODEL_NAME, name);
@@ -106,7 +103,7 @@ public class ModelerController {
         repositoryService.saveModel(model);
         createObjectNode(model.getId());
         response.sendRedirect("/editor?modelId=" + model.getId());
-        logger.info("创建模型结束，返回模型ID：{}", model.getId());
+        log.info("创建模型结束，返回模型ID：{}", model.getId());
     }
 
     /**
@@ -116,7 +113,7 @@ public class ModelerController {
      */
     @SuppressWarnings("deprecation")
     private void createObjectNode(String modelId) {
-        logger.info("创建模型完善ModelEditorSource入参模型ID：{}", modelId);
+        log.info("创建模型完善ModelEditorSource入参模型ID：{}", modelId);
         ObjectNode editorNode = objectMapper.createObjectNode();
         editorNode.put("id", "canvas");
         editorNode.put("resourceId", "canvas");
@@ -126,9 +123,9 @@ public class ModelerController {
         try {
             repositoryService.addModelEditorSource(modelId, editorNode.toString().getBytes("utf-8"));
         } catch (Exception e) {
-            logger.info("创建模型时完善ModelEditorSource服务异常：{}", e);
+            log.info("创建模型时完善ModelEditorSource服务异常：{}", e);
         }
-        logger.info("创建模型完善ModelEditorSource结束");
+        log.info("创建模型完善ModelEditorSource结束");
     }
 
     /**
@@ -139,13 +136,13 @@ public class ModelerController {
     @ResponseBody
     @RequestMapping("/publish")
     public Object publish(String modelId) {
-        logger.info("流程部署入参modelId：{}", modelId);
+        log.info("流程部署入参modelId：{}", modelId);
         Map<String, String> map = new HashMap<String, String>();
         try {
             Model modelData = repositoryService.getModel(modelId);
             byte[] bytes = repositoryService.getModelEditorSource(modelData.getId());
             if (bytes == null) {
-                logger.info("部署ID:{}的模型数据为空，请先设计流程并成功保存，再进行发布", modelId);
+                log.info("部署ID:{}的模型数据为空，请先设计流程并成功保存，再进行发布", modelId);
                 map.put("code", "FAILURE");
                 return map;
             }
@@ -162,10 +159,10 @@ public class ModelerController {
             repositoryService.saveModel(modelData);
             map.put("code", "SUCCESS");
         } catch (Exception e) {
-            logger.info("部署modelId:{}模型服务异常：{}", modelId, e);
+            log.info("部署modelId:{}模型服务异常：{}", modelId, e);
             map.put("code", "FAILURE");
         }
-        logger.info("流程部署出参map：{}", map);
+        log.info("流程部署出参map：{}", map);
         return map;
     }
 
@@ -225,7 +222,7 @@ public class ModelerController {
     @ResponseBody
     @RequestMapping("/revokePublish")
     public Object revokePublish(String modelId) {
-        logger.info("撤销发布流程入参modelId：{}", modelId);
+        log.info("撤销发布流程入参modelId：{}", modelId);
         Map<String, String> map = new HashMap<String, String>();
         Model modelData = repositoryService.getModel(modelId);
         if (null != modelData) {
@@ -237,11 +234,11 @@ public class ModelerController {
                 repositoryService.deleteDeployment(modelData.getDeploymentId(), true);
                 map.put("code", "SUCCESS");
             } catch (Exception e) {
-                logger.error("撤销已部署流程服务异常：{}", e);
+                log.error("撤销已部署流程服务异常：{}", e);
                 map.put("code", "FAILURE");
             }
         }
-        logger.info("撤销发布流程出参map：{}", map);
+        log.info("撤销发布流程出参map：{}", map);
         return map;
     }
 
@@ -254,7 +251,7 @@ public class ModelerController {
     @ResponseBody
     @RequestMapping("/delete")
     public Object deleteProcessInstance(String modelId) {
-        logger.info("删除流程实例入参modelId：{}", modelId);
+        log.info("删除流程实例入参modelId：{}", modelId);
         Map<String, String> map = new HashMap<>();
         Model modelData = repositoryService.getModel(modelId);
 
@@ -269,12 +266,12 @@ public class ModelerController {
 
                 map.put("code", "SUCCESS");
             } catch (Exception e) {
-                logger.error("删除流程实例服务异常：{}", e);
+                log.error("删除流程实例服务异常：{}", e);
                 map.put("code", "FAILURE");
             }
         }
 
-        logger.info("删除流程实例出参map：{}", map);
+        log.info("删除流程实例出参map：{}", map);
         return map;
     }
 
@@ -347,7 +344,7 @@ public class ModelerController {
      * 获取流程图像，已执行节点和流程线高亮显示
      */
     public void getActivitiProccessImage(String pProcessInstanceId, HttpServletResponse response) {
-        logger.info("[开始]-获取流程图图像");
+        log.info("[开始]-获取流程图图像");
         try {
             //  获取历史流程实例
             HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
@@ -365,10 +362,10 @@ public class ModelerController {
                 // 已执行的节点ID集合
                 List<String> executedActivityIdList = new ArrayList<String>();
                 int index = 1;
-                logger.info("获取已经执行的节点ID");
+                log.info("获取已经执行的节点ID");
                 for (HistoricActivityInstance activityInstance : historicActivityInstanceList) {
                     executedActivityIdList.add(activityInstance.getActivityId());
-                    logger.info("第[" + index + "]个已执行节点=" + activityInstance.getActivityId() + " : " + activityInstance.getActivityName());
+                    log.info("第[" + index + "]个已执行节点=" + activityInstance.getActivityId() + " : " + activityInstance.getActivityName());
                     index++;
                 }
 
@@ -398,10 +395,10 @@ public class ModelerController {
                 os.close();
                 imageStream.close();
             }
-            logger.info("[完成]-获取流程图图像");
+            log.info("[完成]-获取流程图图像");
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            logger.error("【异常】-获取流程图失败！" + e.getMessage());
+            log.error("【异常】-获取流程图失败！" + e.getMessage());
         }
     }
 
