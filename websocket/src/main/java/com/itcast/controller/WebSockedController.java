@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 功能描述：
  *
- * @authro JIAQI
+ * @author JIAQI
  * @date 2019/7/8 - 17:29
  */
 @Controller
@@ -41,6 +41,8 @@ public class WebSockedController {
     /**
      * 精确推送到指定用户
      * SendToUser 发送给指定用户
+     * broadcast = false
+     * 如果一个帐号打开了多个浏览器窗口，也就是打开了多个websocket session通道，这时，spring webscoket默认会把消息推送到同一个帐号不同的session，你可以利用broadcast = false把避免推送到所有的session中
      */
     @MessageMapping("/sendUser")
     @SendToUser(value = "/queue/subscribeUser", broadcast = false)

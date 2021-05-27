@@ -33,14 +33,15 @@ public class WebSocketHandleInterceptor implements ChannelInterceptor {
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+        //1、判断是否首次连接
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-//            String username = accessor.getFirstNativeHeader("username");
-//            if (StringUtils.isEmpty(username)) {
+//            String username = accessor.getFirstNativeHeader("name");
+//            if (username == null) {
 //                return null;
 //            }
-////            // 绑定user
-//            Principal principal = new UserPrincipal(username);
-//            accessor.setUser(principal);
+//            // 绑定user
+//            User user = new User(username);
+//            accessor.setUser(user);
 
             Object raw = message.getHeaders().get(SimpMessageHeaderAccessor.NATIVE_HEADERS);
             if (raw instanceof Map) {
@@ -51,6 +52,7 @@ public class WebSocketHandleInterceptor implements ChannelInterceptor {
                 }
             }
         }
+        //不是首次连接，已经登陆成功
         return message;
     }
 }
