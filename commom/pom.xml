@@ -12,6 +12,7 @@
     <description>一些常见工具类的封装使用</description>
     <modules>
         <module>file-upload</module>
+        <module>boot-util</module>
     </modules>
 
     <artifactId>commom</artifactId>

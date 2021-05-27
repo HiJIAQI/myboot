@@ -27,22 +27,26 @@
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
+
             <!-- pagehelper 分页插件 -->
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pagehelper.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -74,6 +78,10 @@
         <module>api</module>
         <module>security</module>
         <module>activiti</module>
+        <module>healthyDemo</module>
+        <module>java8</module>
+        <module>aliyun-api</module>
+        <module>nio-netty</module>
     </modules>
 
 
