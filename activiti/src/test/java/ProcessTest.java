@@ -86,8 +86,8 @@ public class ProcessTest {
     @Test
     public void deleteProcessInitInfo() {
         // 流程部署id
-        String deploymentId = "5001";
-        repositoryService.deleteDeployment(deploymentId);
+        String deploymentId = "15001";
+        // repositoryService.deleteDeployment(deploymentId);
         // 当cascade定义为true的时候为级联删除，会删除相关联的流程数据
         // 若不进行级联的话，如果当前有正在执行的流程则会抛出异常，无法进行成功删除
         repositoryService.deleteDeployment(deploymentId, true);
@@ -95,6 +95,9 @@ public class ProcessTest {
     }
 
     // 修改流程定义信息
+
+
+
     // 查询流程图
 
     /**
@@ -102,9 +105,14 @@ public class ProcessTest {
      */
     @Test
     public void queryLatestProcessDefinition() {
+        // 流程定义的key
+        String processDefinitionKey = "leave";
         ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
         // 查看最新版本的流程定义
-        List<ProcessDefinition> processDefinitionList = processDefinitionQuery.latestVersion().list();
+        List<ProcessDefinition> processDefinitionList = processDefinitionQuery
+                .processDefinitionKey(processDefinitionKey)
+                .latestVersion()
+                .list();
         for (ProcessDefinition pd : processDefinitionList) {
             System.out.println("流程定义ID:" + pd.getId());
             System.out.println("流程部署ID:" + pd.getDeploymentId());
@@ -116,6 +124,21 @@ public class ProcessTest {
         }
     }
 
-    // 附加：删除流程定义
+    /**
+     * 附加：删除流程定义
+     */
+    public void deleteAllSameVersion() {
+        // 流程定义的key
+        String processDefinitionKey = "leave";
+        // 根据流程定义的key查询流程集合
+        List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery()
+                .processDefinitionKey(processDefinitionKey).list();
 
+        if (null != list && list.size() > 0) {
+            for (ProcessDefinition pd : list) {
+                repositoryService.deleteDeployment(pd.getDeploymentId(), true);
+
+            }
+        }
+    }
 }
