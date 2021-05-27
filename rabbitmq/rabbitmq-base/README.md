@@ -1,4 +1,4 @@
-###**boot-abbitMQ 整合案例**
+###**boot-RabbitMQ 整合案例**
 
 **关于MQ的个人理解：根据官方文档可将消息的收发者分为生产者(producer)、消费者(consumer)**
 
