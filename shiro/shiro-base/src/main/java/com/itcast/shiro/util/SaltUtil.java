@@ -26,7 +26,7 @@ public class SaltUtil {
     public static void main(String[] args) {
         String oldPassword = new SimpleHash("MD5", "123456",
                 ByteSource.Util.bytes("admin"), 2).toHex();
-        System.out.println(SaltUtil.doSalt("123456", "admin"));
+        System.out.println(SaltUtil.doSalt("123456", "b35df3"));
         System.out.println(oldPassword);
     }
 }

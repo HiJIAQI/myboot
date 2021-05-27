@@ -10,6 +10,7 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -22,13 +23,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 public class DemoController {
 
-//    @GetMapping("/login")
-//    @ResponseBody
-//    public String login() {
-//        return "登陆页面";
-//    }
-
     @GetMapping("/login")
+    public String login() {
+        return "/login";
+    }
+
+    @PostMapping("/login")
     public String login(SysUser sysUser) {
         // 主体提交认证请求
         Subject subject = SecurityUtils.getSubject();

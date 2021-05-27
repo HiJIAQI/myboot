@@ -2,12 +2,24 @@ server:
   port: 80
 
 spring:
+
   ##mysql
   datasource:
+    #默认就是hikari，可缺省
+    type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:mysql://47.102.115.140:3306/myboot?characterEncoding=utf8&useSSL=false&serverTimezone=UTC&rewriteBatchedStatements=true
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      #等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException，默认30000ms，即30s
+      #connection-timeout: 30000
+      # 连接超时的最大时长（毫秒），超时则被释放（retired），默认600000ms，即10min
+      #idle-timeout: 600000
+      #连接池的最大尺寸（闲置连接+正在使用的连接），默认10
+      maximum-pool-size: 200
+      #最小空闲连接数，默认10
+      minimum-idle: 50
   ##配置thymeleaf模板模式
   thymeleaf:
       mode: HTML5
@@ -23,6 +35,17 @@ mybatis:
   ## 驼峰命名
   configuration:
     map-underscore-to-camel-case: true
+
+## PageHelper分页插件
+pagehelper:
+  # 分页插件会自动检测当前的数据库链接，自动选择合适的分页方式（可以不设置）
+  helperDialect: mysql
+  # 分页合理化参数，默认值为false。当该参数设置为 true 时，pageNum<=0 时会查询第一页， pageNum>pages（超过总数时），会查询最后一页。默认false 时，直接根据参数进行查询
+  reasonable: true
+  # 支持通过 Mapper 接口参数来传递分页参数，默认值false，分页插件会从查询方法的参数值中，自动根据上面 params 配置的字段中取值，查找到合适的值时就会自动分页。 使用方法可以参考测试代码中的 com.github.pagehelper.test.basic 包下的 ArgumentsMapTest 和 ArgumentsObjTest。
+  supportMethodsArguments: true
+  # 为了支持startPage(Object params)方法，增加了该参数来配置参数映射，用于从对象中根据属性名取值， 可以配置 pageNum,pageSize,count,pageSizeZero,reasonable，不配置映射的用默认值， 默认值为pageNum=pageNum;pageSize=pageSize;count=countSql;reasonable=reasonable;pageSizeZero=pageSizeZero
+  params: count=countSql
 
 logging:
   level:

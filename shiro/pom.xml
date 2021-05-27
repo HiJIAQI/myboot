@@ -94,6 +94,7 @@
         <module>shiro-ehcache</module>
         <module>shiro-base</module>
         <module>shiro-more-realm</module>
+        <module>shiro-jwt</module>
     </modules>
 
 </project>

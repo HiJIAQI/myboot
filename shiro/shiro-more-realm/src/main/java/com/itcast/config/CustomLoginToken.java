@@ -7,7 +7,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
  * 添加一个字段用于标识不同的realm,用户登录的时候带上标识的字段，
  * shiro则根据字段去不同的realm去验证登陆，授权等.
  *
- * @authro JIAQI
+ * @author  JIAQI
  * @date 2019/11/13 - 16:22
  */
 public class CustomLoginToken extends UsernamePasswordToken {
