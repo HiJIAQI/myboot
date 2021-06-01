@@ -1,4 +1,4 @@
-package com.itcast;
+package com.itcast.simple;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
