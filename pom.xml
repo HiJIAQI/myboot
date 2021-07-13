@@ -78,10 +78,10 @@
         <module>api</module>
         <module>security</module>
         <module>activiti</module>
-        <module>healthyDemo</module>
         <module>java8</module>
         <module>aliyun-api</module>
         <module>nio-netty</module>
+        <module>elastic-search</module>
     </modules>
 
 
