@@ -82,6 +82,8 @@
         <module>aliyun-api</module>
         <module>nio-netty</module>
         <module>elastic-search</module>
+        <module>pay</module>
+        <module>ali-pay</module>
     </modules>
 
 
