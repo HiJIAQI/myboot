@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    ###可读数据源
+    select:
+      jdbc-url: jdbc:mysql://192.168.80.104:8066/my-test
+      driver-class-name: com.mysql.jdbc.Driver
+      username: user
+      password: user
+    ####可写数据源  
+    update:
+      jdbc-url: jdbc:mysql://192.168.80.104:8066/my-test
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+      password: 123456
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true

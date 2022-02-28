@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    db1:
+      jdbc-url: jdbc:mysql://47.102.115.140:3306/myboot?characterEncoding=utf8&useUnicode=true&useSSL=false&serverTimezone=GMT%2B8
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    db2:
+      jdbc-url: jdbc:mysql://47.102.115.140:3306/itstack?characterEncoding=utf8&useUnicode=true&useSSL=false&serverTimezone=GMT%2B8
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  # xml文件路径
+  mapper-locations: classpath:mybatis/**/*Mapper.xml
