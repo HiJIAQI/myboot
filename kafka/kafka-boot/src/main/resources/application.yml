@@ -1,0 +1,41 @@
+spring:
+  kafka:
+    # 集群地址
+    bootstrap-servers: hadoop1:9092
+    # 生产者
+    producer:
+      # 应答机制
+      acks: all
+      # 发送失败重试次数
+      retries: 1
+      # 消息编码序列化类(可不写，底层默认有指定)
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # 事务支持
+      transaction-id-prefix: kafka_tx.
+    # 消费者
+    consumer:
+      # 是否开启自动提交 offset(默认true)
+      enable-auto-commit: false
+      # 自动提交 offset 的时间间隔(ms),默认：5000
+      #auto-commit-interval: 1000
+      # 消费offset取值earliest,latest,none（默认：latest）
+      # earliest:从头开始取值，latest:从当前消息发送开始取值
+      auto-offset-reset: earliest
+      # 消息解码序列化类(可不写，底层默认有指定)
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # 单次轮询调用中返回的记录的最大数量（默认：500）
+      # max-poll-records: 2
+    # 设置手动提交时需要进行配置,若不进行配置还是默认自动提交
+    # https://blog.csdn.net/pony_maggie/article/details/104089110?utm_medium=distribute.pc_aggpage_search_result.none-task-blog-2~aggregatepage~first_rank_ecpm_v1~rank_aggregation-1-104089110.pc_agg_rank_aggregation&utm_term=springboot+%E5%85%B3%E9%97%AD%E8%87%AA%E5%8A%A8%E6%8F%90%E4%BA%A4&spm=1000.2123.3001.4430
+    listener:
+      ack-mode: manual
+      # 批量拉取数据时需要设置，默认:单例
+      # type: batch
+      # 单次轮询拉取数据超时时间(ms)
+      # poll-timeout: 5000
+    # 自己定义的主题名称,在微服务中使用Value注解注入调用，如果kafka中没有该主题，则会自动创建
+    template:
+      default-topic: myKafka
+
