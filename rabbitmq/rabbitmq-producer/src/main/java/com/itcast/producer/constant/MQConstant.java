@@ -3,9 +3,9 @@ package com.itcast.producer.constant;
 /**
  * 功能描述：MQ常量统一定义
  * (包含：队列、交换机、路由键)
+ * @date 2020/4/7 - 10:21
  *
  * @author JIAQI
- * @date 2020/4/7 - 10:21
  */
 public class MQConstant {
 

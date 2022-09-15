@@ -83,11 +83,11 @@
         <module>nio-netty</module>
         <module>elastic-search</module>
         <module>pay</module>
-        <module>ali-pay</module>
         <module>kafka</module>
         <module>kafka/kafka-base</module>
         <module>kafka/kafka-boot</module>
         <module>mycat</module>
+        <module>rocketmq</module>
     </modules>
 
 
